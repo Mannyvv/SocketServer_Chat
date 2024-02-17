@@ -1,0 +1,34 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: blue;
+    display: block;
+}
+
+.header{
+    background-color: red;
+    width: 100%;
+    height: 10vh;
+   
+}
+
+
+.container1{
+    display: block;
+    width: 100%;
+    height: 50vh;
+    background-color: green;
+
+   
+}
+
+.container2{
+    display: block;
+    width: 100%;
+    height: 50vh;
+    background-color: rgb(255, 238, 4);
+
+}
+
