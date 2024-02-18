@@ -1,23 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Socket Server - Python Chat</title>
-    <link rel="stylesheet" type="text/css" href="index.css"/>
+    <link rel="stylesheet" type="text/css" href="index.css" />
 </head>
+
 <body>
     <header class="header">d</header>
     <div class="container1">
-        <div class="users-list-section"></div>
-        <div class="chat-window-section"></div>
-        <div class="register-login-section"></div>
+        <div class="users-list-section">
+
+        </div>
+        <div class="chat-window-section">
+
+        </div>
+        <div class="register-login-section">
+            <form id="register-form">
+                <h1>Register User</h1>
+                <label id="r-username-label" for="r-username">Username:</label>
+                <input class="text-box id="r-username" name="r-username" type="text" placeholder="Create Username" />
+                <label id="r-password-lable" for="r-password">Password:</label>
+                <input class="text-box id="r-password" name="r-password" type="password" placeholder="Create Password"/>
+                <input id="register" name="register" type="submit" value="Register"/>
+            </form>
+            <form id="login-form">
+                <h1>Login</h1>
+                <label id="username-label" for="username">Username:</label>
+                <input class="text-box id="username" name="username" type="text" placeholder="Enter Username" />
+                <label id="password-label" for="password">Password:</label>
+                <input class="text-box id="password" name="password" type="password" placeholder="Enter Password"/>
+                <input id="login" name="login" type="submit" value="Login"/>
+            </form>
+        </div>
     </div>
     <div class="container2">
-        <label for="text-box">Enter Chat:</label>
-        <input class="text-box" name="text-box" type="text"/>
-        <input type="button" value="Submit" />
+        <div class="enter-chat">
+            <label id="text-box-label" for="text-box">Enter Chat:</label>
+            <input class="text-box" id="text-box" name="text-box" type="text" />
+            <input id=text-box-button type="button" value="Send" />
+        </div>
     </div>
-    
+
 </body>
+
 </html>
