@@ -4,13 +4,12 @@ html, body {
     margin: 0;
     padding: 0;
     display: block;
-    color: white;
 }
 a.active {
     color: rgb(255, 255, 255);
 }
 .header{
-    background: linear-gradient(90deg, #021c3a 0%, #0f3057 35%, #1a508b 100%);
+    background: linear-gradient(90deg, rgb(169, 166, 230) 0%, rgb(90, 90, 255) 35%, rgba(0,212,255,1) 100%);
     width: 100%;
     height: 10vh;
     display: flex;
@@ -34,7 +33,7 @@ a.active {
     display: block;
     width: 100%;
     height: 80vh;
-    background-color: #021c3a;
+   
     display: flex;
     flex-direction: row; 
 }
@@ -43,93 +42,23 @@ a.active {
     /* border: 1px black solid; */
     width: 20vw;
     display: flex;
-    
     justify-content: center;
     align-items: center;
 }
 
-#user-list-title{
-    border-bottom: 1px rgb(255, 255, 255) solid;
-    display: block;
-    margin-bottom: 0px;
-    
-}
-#user-list-body{
-    list-style-type: none;
-    padding: 0;
-    overflow-y: auto;
-    
-    
 
-}
 #user-list{
     display: flex;
     flex-direction: column;
     align-items: start;
     height: 80%;
-    width: 70%;
-    border: 1px rgb(255, 255, 255) solid;
+    width: 80%;
+    border: 1px black solid;
     border-radius: 10px;
     box-shadow: 0 0 10px 1px #4b5b81;
     padding: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    align-items: stretch;
-}
-
-.user-list-item{
-    border: 1px rgb(255, 255, 255) solid;
-    border-radius: 15px;
-    padding: 5px;
-    margin: 4px 4px 4px 0;
-    display: flex;
-    justify-content: space-between;
-    
-    
-
-
-}
-
-.green-circle{
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin-right: 5px;
-    background-color: #1eff00;
-    animation: glow 2s ease-in-out infinite;
-    
-}
-
-@keyframes glow {
-    0% {
-        box-shadow: 0 0 0px 0px #1eff00;
-    }
-    20% {
-        box-shadow: 0 0 5px 2px #1eff00;
-    }
-    40% {
-        box-shadow: 0 0 5px 2px #1eff00;
-    }
-    60% {
-        box-shadow: 0 0 3px 2px #1eff00;
-    }
-    80% {
-        box-shadow: 0 0 5px 1px #1eff00;
-    }
-    100% {
-        box-shadow: 0 0 0px 0px #1eff00;
-    }
-}
-
-    
-.red-circle{
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-   
-    margin-right: 5px;
-    background-color: red;
-    
 }
 .chat-window-section{
     /* border: 1px black solid; */
@@ -143,55 +72,15 @@ a.active {
 #chat-window{
     display: flex;
     flex-direction: column;
-    /* align-items: flex-start; */
+    align-items: flex-start;
     height: 80%;
     width: 100%;
     border: 1px black solid;
     border-radius: 10px;
-    padding: 10px;
     box-shadow: 0 0 10px 1px #4b5b81;
     /* padding: 1px; */
-    
-}
-
-
-#chat-window-title{
-    border-bottom: 1px black solid;
-    display: block;
-    margin-bottom: 0px;
-    
-   
-}
-#chat-window-body{
-    list-style-type: none;
-    padding: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    margin: 0;
-    padding: 0;
-    overflow-y: auto;
-}
-
-.chat-window-item{
-
-    border: 1px black solid;
-    border-radius: 20px;
-    padding: 5px;
-    margin: 4px 4px 4px 0;
-    background-color: #858585;
-}
-
-/* Use this for user's chat */
-.logged-user-message{
-    align-self: flex-end;
-    background-color: #0c509c;
-    color: white;
 }
 .register-login-section{
     /* border: 1px black solid; */
@@ -266,7 +155,7 @@ a.active {
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px 1px #4b5b81;
-    width: 70%;
+    width: 80%;
 }
 #login-form{
     display: flex;
@@ -277,7 +166,7 @@ a.active {
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px 1px #4b5b81;
-    width: 70%;
+    width: 80%;
 
 }
 
@@ -289,7 +178,7 @@ input{
 }
 input:focus{
    outline-width: 2px;
-    outline-color: rgb(255, 255, 255);
-    /* box-shadow: 0 0 2px 5px #5cb85c; */
+    outline-color: rgb(66, 155, 7);
+    box-shadow: 0 0 2px 5px #5cb85c;
 
 }

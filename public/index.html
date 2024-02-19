@@ -9,29 +9,113 @@
 </head>
 
 <body>
-    <header class="header">d</header>
+    <header class="header">
+        <h1>Python Socket Server</h1>
+        <nav class="nav-items">
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="https://github.com/Mannyvv/SocketServer_Chat" target="_blank">Github</a></li>
+            </ul>
+    </header>
     <div class="container1">
         <div class="users-list-section">
             <div id="user-list">
-                <h1>Users</h1>
-                <ul id="users">
-                    <li>user1</li>
-                    <li>user2</li>
-                    <li>user3</li>
-                    <li>user4</li>
-                    <li>user5</li>
-                    <li>user6</li>
-                    <li>user7</li>
-                    <li>user8</li>
-                    <li>user9</li>
-                    <li>user10</li>
+                <h1 id="user-list-title">Users</h1>
+                <ul id="user-list-body">
+                    <!-- TODO: Add users here -->
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="green-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                    <li class="user-list-item">User<div class="red-circle"></div></li>
+                   
+
+
                 </ul>
-               
+
 
             </div>
 
         </div>
         <div class="chat-window-section">
+            <div id="chat-window">
+                    <!-- TODO: Grab data in js -->
+                    <!-- Idea, might use block elements so the chat is stacked
+                    between incoming and users chat. Make screen scrollable -->
+                    <h1 id="chat-window-title">Chat</h1>
+                    <ul id="chat-window-body">
+                        <li class="chat-window-item">user2: Hi</li>
+                        <li class="chat-window-item">user3: How are you?</li>
+                        <li class="chat-window-item">user4: I am fine</li>
+                        <li class="chat-window-item logged-user-message">user1: Hello</li>
+                        <li class="chat-window-item">user5: How about you?</li>
+                        <li class="chat-window-item">user6: I am good</li>
+                        <li class="chat-window-item">user7: What are you doing?</li>
+                        <li class="chat-window-item">user8: I am working</li>
+                        <li class="chat-window-item">user9: What about you?</li>
+                        <li class="chat-window-item">user10: I am studying</li>
+                        <li class="chat-window-item">user1: Hello</li>
+                        <li class="chat-window-item">user2: Hi</li>
+                        <li class="chat-window-item">user3: How are you?</li>
+                        <li class="chat-window-item logged-user-message">user1: Hello</li>
+                        <li class="chat-window-item">user4: I am fine</li>
+                        <li class="chat-window-item">user5: How about you?</li>
+                        <li class="chat-window-item">user6: I am good</li>
+                        <li class="chat-window-item">user7: What are you doing?</li>
+                        <li class="chat-window-item logged-user-message">user1: Hello</li>
+                        <li class="chat-window-item">user8: I am working</li>
+                        <li class="chat-window-item">user9: What about you?</li>
+                        <li class="chat-window-item">user10: I am studying</li>
+                        <li class="chat-window-item">user1: Hello</li>
+                        <li class="chat-window-item">user2: Hi</li>
+                        <li class="chat-window-item">user3: How are you?</li>
+                        <li class="chat-window-item">user4: I am fine</li>
+                        <li class="chat-window-item logged-user-message">user1: Hello</li>
+                        <li class="chat-window-item">user5: How about you?</li>
+                        <li class="chat-window-item">user6: I am good</li>
+                        <li class="chat-window-item logged-user-message">user1: Hello</li>
+                        <li class="chat-window-item">user7: What are you doing?</li>
+                        <li class="chat-window-item">user8: I am working</li>
+                        <li class="chat-window-item">user9: What about you?</li>
+                        <li class="chat-window-item">user10: I am studying</li>
+                        <li class="chat-window-item">user7: What are you doing?</li>
+                        <li class="chat-window-item">user8: I am working</li>
+                        <li class="chat-window-item">user9: What about you?</li>
+                        <li class="chat-window-item">user10: I am studying</li>
+                        <li class="chat-window-item">user8: I am working</li>
+                        <li class="chat-window-item">user9: What about you?</li>
+                        <li class="chat-window-item">user10: I am studying</li>
+                        <li class="chat-window-item logged-user-message">user1: Hello</li>
+                        <li class="chat-window-item">user7: What are you doing?</li>
+                        <li class="chat-window-item">user8: I am working</li>
+                        <li class="chat-window-item">user9: What about you?</li>
+                        <li class="chat-window-item">user10: I am studying</li>
+                    </ul>
+            </div>
 
         </div>
         <div class="register-login-section">
