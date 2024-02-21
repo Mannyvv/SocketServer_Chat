@@ -4,17 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="public/favicon.ico" type="image/x-icon">
     <title>Socket Server - Python Chat</title>
     <link rel="stylesheet" type="text/css" href="public/index.css" />
 </head>
 
-<body>
+<body onload="onLoad()">
     <header class="header">
         <h1>Python Socket Server</h1>
         <nav class="nav-items">
             <ul>
                 <li><a href="#" class="active">Home</a></li>
-                <li><a href="about.html">About</a></li>
+                <li><a href="public/about.html">About</a></li>
                 <li><a href="https://github.com/Mannyvv/SocketServer_Chat" target="_blank">Github</a></li>
             </ul>
     </header>
@@ -24,35 +25,63 @@
                 <h1 id="user-list-title">Users</h1>
                 <ul id="user-list-body">
                     <!-- TODO: Add users here -->
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="green-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                    <li class="user-list-item">User<div class="red-circle"></div></li>
-                   
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="green-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+                    <li class="user-list-item">User<div class="red-circle"></div>
+                    </li>
+
 
 
                 </ul>
@@ -63,58 +92,22 @@
         </div>
         <div class="chat-window-section">
             <div id="chat-window">
-                    <!-- TODO: Grab data in js -->
-                    <!-- Idea, might use block elements so the chat is stacked
+                <!-- TODO: Grab data in js -->
+                <!-- Idea, might use block elements so the chat is stacked
                     between incoming and users chat. Make screen scrollable -->
-                    <h1 id="chat-window-title">Chat</h1>
-                    <ul id="chat-window-body">
-                        <li class="chat-window-item">user2: Hi</li>
-                        <li class="chat-window-item">user3: How are you?</li>
-                        <li class="chat-window-item">user4: I am fine</li>
-                        <li class="chat-window-item logged-user-message">user1: Hello</li>
-                        <li class="chat-window-item">user5: How about you?</li>
-                        <li class="chat-window-item">user6: I am good</li>
-                        <li class="chat-window-item">user7: What are you doing?</li>
-                        <li class="chat-window-item">user8: I am working</li>
-                        <li class="chat-window-item">user9: What about you?</li>
-                        <li class="chat-window-item">user10: I am studying</li>
-                        <li class="chat-window-item">user1: Hello</li>
-                        <li class="chat-window-item">user2: Hi</li>
-                        <li class="chat-window-item">user3: How are you?</li>
-                        <li class="chat-window-item logged-user-message">user1: Hello</li>
-                        <li class="chat-window-item">user4: I am fine</li>
-                        <li class="chat-window-item">user5: How about you?</li>
-                        <li class="chat-window-item">user6: I am good</li>
-                        <li class="chat-window-item">user7: What are you doing?</li>
-                        <li class="chat-window-item logged-user-message">user1: Hello</li>
-                        <li class="chat-window-item">user8: I am working</li>
-                        <li class="chat-window-item">user9: What about you?</li>
-                        <li class="chat-window-item">user10: I am studying</li>
-                        <li class="chat-window-item">user1: Hello</li>
-                        <li class="chat-window-item">user2: Hi</li>
-                        <li class="chat-window-item">user3: How are you?</li>
-                        <li class="chat-window-item">user4: I am fine</li>
-                        <li class="chat-window-item logged-user-message">user1: Hello</li>
-                        <li class="chat-window-item">user5: How about you?</li>
-                        <li class="chat-window-item">user6: I am good</li>
-                        <li class="chat-window-item logged-user-message">user1: Hello</li>
-                        <li class="chat-window-item">user7: What are you doing?</li>
-                        <li class="chat-window-item">user8: I am working</li>
-                        <li class="chat-window-item">user9: What about you?</li>
-                        <li class="chat-window-item">user10: I am studying</li>
-                        <li class="chat-window-item">user7: What are you doing?</li>
-                        <li class="chat-window-item">user8: I am working</li>
-                        <li class="chat-window-item">user9: What about you?</li>
-                        <li class="chat-window-item">user10: I am studying</li>
-                        <li class="chat-window-item">user8: I am working</li>
-                        <li class="chat-window-item">user9: What about you?</li>
-                        <li class="chat-window-item">user10: I am studying</li>
-                        <li class="chat-window-item logged-user-message">user1: Hello</li>
-                        <li class="chat-window-item">user7: What are you doing?</li>
-                        <li class="chat-window-item">user8: I am working</li>
-                        <li class="chat-window-item">user9: What about you?</li>
-                        <li class="chat-window-item">user10: I am studying</li>
-                    </ul>
+                <h1 id="chat-window-title">Chat</h1>
+                <ul id="chat-window-body">
+                    <!-- <li class="chat-window-item">user2: Hi</li>
+                    <li class="chat-window-item">user3: How are you?</li>
+                    <li class="chat-window-item">user4: I am fine</li>
+                    <li class="chat-window-item logged-user-message">user1: Hello</li>
+                    <li class="chat-window-item">user5: How about you?</li>
+                
+                    <li class="chat-window-item">user3: How are you?</li>
+                    <li class="chat-window-item logged-user-message">user1: Hello</li>
+                    <li class="chat-window-item">user4: I am fine</li> -->
+                    
+                </ul>
             </div>
 
         </div>
@@ -122,18 +115,18 @@
             <form id="register-form">
                 <h1>Register User</h1>
                 <label id="r-username-label" for="r-username">Username:</label>
-                <input class="text-box id=" r-username" name="r-username" type="text" placeholder="Create Username" />
+                <input class="text-box id=" id ="r-username" name="r-username" type="text" placeholder="Create Username" />
                 <label id="r-password-lable" for="r-password">Password:</label>
-                <input class="text-box id=" r-password" name="r-password" type="password"
+                <input class="text-box id=" id = "r-password" name="r-password" type="password"
                     placeholder="Create Password" />
-                <input id="register" name="register" type="submit" value="Register" />
+                <input id="register" name="register" type="button" value="Register" />
             </form>
             <form id="login-form">
                 <h1>Login</h1>
                 <label id="username-label" for="username">Username:</label>
-                <input class="text-box id=" username" name="username" type="text" placeholder="Enter Username" />
+                <input class="text-box id=" id="username" name="username" type="text" placeholder="Enter Username" />
                 <label id="password-label" for="password">Password:</label>
-                <input class="text-box id=" password" name="password" type="password" placeholder="Enter Password" />
+                <input class="text-box id=" id ="password" name="password" type="password" placeholder="Enter Password" />
                 <input id="login" name="login" type="submit" value="Login" />
             </form>
         </div>
@@ -142,10 +135,10 @@
         <div class="enter-chat">
             <label id="text-box-label" for="text-box">Enter Chat:</label>
             <input class="text-box" id="text-box" name="text-box" type="text" />
-            <input id=text-box-button type="button" value="Send" />
+            <input id="text-box-button" type="button" onclick="sendMessage()" value="Send" />
         </div>
     </div>
-
+    <script src="public/index.js"></script>
 </body>
 
 </html>
