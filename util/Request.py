@@ -21,9 +21,10 @@ class Request:
         #Both methods could be made into one method, but I think 
         #it's better to keep them separate for readability
     def get_method_url_protocol(self, header_data):
-         
+        
         header_data_split = header_data.split(b'\r\n')
-
+        if len(header_data_split[0].split(b' ')) < 3:
+            return None, None, None
         #Obtains CRUD method, URL, and protocol from first line e.g GET / HTTP/1.1
         method, url, protocol = header_data_split[0].split(b' ')
         return method, url, protocol

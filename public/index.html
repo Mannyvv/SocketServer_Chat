@@ -8,7 +8,7 @@
     <title>Socket Server - Python Chat</title>
     <link rel="stylesheet" type="text/css" href="public/index.css" />
 </head>
-
+ 
 <body onload="onLoad()">
     <header class="header">
         <h1>Python Socket Server</h1>
@@ -106,29 +106,38 @@
                     <li class="chat-window-item">user3: How are you?</li>
                     <li class="chat-window-item logged-user-message">user1: Hello</li>
                     <li class="chat-window-item">user4: I am fine</li> -->
-                    
+
                 </ul>
             </div>
 
         </div>
         <div class="register-login-section">
-            <form id="register-form">
+            <div id="logout-holder" hidden>
+                <button id="logout-button" type="submit" onclick="logout()">Logout</button>
+            </div>
+            <form id="register-form" hidden onsubmit="registerForm()" method="post" action="/register-user">
                 <h1>Register User</h1>
                 <label id="r-username-label" for="r-username">Username:</label>
-                <input class="text-box id=" id ="r-username" name="r-username" type="text" placeholder="Create Username" />
+                <input class="text-box id=" id="r-username" name="r-username" type="text"
+                    placeholder="Create Username" />
                 <label id="r-password-lable" for="r-password">Password:</label>
-                <input class="text-box id=" id = "r-password" name="r-password" type="password"
+                <input class="text-box" id="r-password" name="r-password" type="password"
                     placeholder="Create Password" />
-                <input id="register" name="register" type="button" value="Register" />
+                <input id="register" type="submit" value="Register" />
             </form>
-            <form id="login-form">
+
+
+
+            <form id="login-form" hidden onsubmit="loginForm()" method="post" action="/login-user">
                 <h1>Login</h1>
                 <label id="username-label" for="username">Username:</label>
                 <input class="text-box id=" id="username" name="username" type="text" placeholder="Enter Username" />
                 <label id="password-label" for="password">Password:</label>
-                <input class="text-box id=" id ="password" name="password" type="password" placeholder="Enter Password" />
-                <input id="login" name="login" type="submit" value="Login" />
+                <input class="text-box" id="password" name="password" type="password"
+                    placeholder="Enter Password" />
+                <input id="login" type="submit" value="Login" />
             </form>
+
         </div>
     </div>
     <div class="container2">

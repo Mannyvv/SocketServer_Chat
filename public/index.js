@@ -1,23 +1,58 @@
 
 let username = "Guest";
+let user_id = null;
+
 const getCookies = () => {
     const cookies = document.cookie.split(';');
     const cookieObj = {};
+    // console.log(cookies)
 
     cookies.forEach((cookie) => {
         const [key, value] = cookie.split('=');
         cookieObj[key] = value;
     })
     // decodeURIComponent() ?
-    return cookieObj;
+    return cookieObj; 
+}
+
+
+const registerForm = () => {
+
+    //Not sure if I should use this or stay with the form subsission
+    // const username = document.getElementById('login-username').value;
+    // const password = document.getElementById('login-password').value;
+    // fetch('/login', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({ username: username, password: password })
+    // })
+    //     .then((response) => {
+    //         response.json().then((data) => {
+    //             if (data.auth_token) {
+    //                 document.cookie = `auth_token=${data.auth_token}`;
+    //                 document.cookie = `username=${username}`;
+    //                 location.reload();
+    //             }
+    //         })
+    //     })
+    //     .catch(error => {
+    //         console.error('Error:', error);
+    //     });
+
+}
+
+const loginForm = () => {
+    // document.getElementById('logout-holder').hidden = false;
+    
+
 }
 
 const sendMessage = () => {
     const message = document.getElementById('text-box').value;
-    cookies = getCookies();
-    if (cookies.auth_token) {
-        username = "Logged User"
-    }
+    
+    
     fetch('/send-message', {
         method: 'POST',
         headers: {
@@ -32,9 +67,7 @@ const sendMessage = () => {
             response.json().then((data) => {
                 addToChatWindow(data);
             })
-            // const chatWindowBody = document.getElementById('chat-window-body');
-            // chatWindowBody.innerHTML = '';
-            // getChatHistory();
+
             console.log("Message Sent")
         })
         .catch(error => {
@@ -42,7 +75,7 @@ const sendMessage = () => {
         });
     // Clear the input box
     document.getElementById('text-box').value = '';
-    getChatHistory();
+    // getChatHistory();
 
 
 
@@ -52,10 +85,11 @@ const addToChatWindow = (data) => {
     const chatWindowBody = document.getElementById('chat-window-body');
     const newMessage = document.createElement('li');
     newMessage.classList.add('chat-window-item');
-    if (getCookies().auth_token) {
+    newMessage.setAttribute('id', data.message_id);
+    if (data.user_id === user_id) {
         newMessage.classList.add('logged-user-message');
     }
-    newMessage.innerHTML = `${data.username}: ${data.message}`
+    newMessage.innerHTML = `<p>X</p>${data.username}: ${data.message}`
     chatWindowBody.appendChild(newMessage);
     chatWindowBody.lastChild.scrollIntoView();
 
@@ -69,14 +103,22 @@ const onLoad = () => {
             sendMessage();
         }
     });
-    setInterval(getChatHistory, 2000);
+
+    cookies = getCookies();
+    
+    if (cookies.loggedIn) {
+        document.getElementById('logout-holder').style.display = 'block';
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'none';
+        user_id = cookies.loggedIn;
+    }
+    setInterval(getChatHistory, 30000);
+    
 
 }
 
 
 const getChatHistory = () => {
-
-    
 
     fetch('/get-chat-history', {
         method: 'GET',
@@ -90,14 +132,34 @@ const getChatHistory = () => {
             messages_data.forEach((message_data) => {
                 addToChatWindow(message_data);
             })
+
+
         })
     })
 }
 
 
-document.getElementById("text-box-button").addEventListener('keyup', (event) => {
-    console.log(event.key);
-    if (event.key === 'Enter') {
-        sendMessage();
-    }
-});
+// document.getElementById("text-box-button").addEventListener('keyup', (event) => {
+//     console.log(event.key);
+//     if (event.key === 'Enter') {
+//         sendMessage();
+//     }
+// });
+
+
+const logout = () => {
+    fetch('/logout-user', {
+        method: 'GET',
+        
+        
+    }).then((response) => {
+            console.log("Logged Out")
+
+        })
+    location.reload();
+    document.getElementById('logout-holder').style.display = 'none';
+    document.getElementById('register-form').style.display = 'block';
+    document.getElementById('login-form').style.display = 'block';
+    
+}
+

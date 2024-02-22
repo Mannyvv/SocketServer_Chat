@@ -191,17 +191,29 @@ a:visited {
 
 
 .chat-window-item{
-    
+    display: flex;
     border: 1px black solid;
     border-radius: 20px;
     padding: 5px;
     margin: 4px 4px 4px 0;
     background-color: #858585;
+    align-items: center;
 }
 
+p{
+    margin: 0;
+    padding: 4px;
+    font-size: x-small;
+    color: black;
+    
 
-.chat-window-item:hover{
+}
+
+p:hover{
     cursor: pointer;
+    border: 1px black solid;
+    border-radius: 20px;
+
 }
 
 
@@ -216,6 +228,7 @@ a:visited {
     width: 20vw;
 
 }
+
 
 .container2{
     display: flex;
@@ -274,6 +287,31 @@ a:visited {
     justify-content: space-evenly;
 }
 
+.register-login-section input{
+    max-width: 100%;
+}
+
+
+
+#logout-button{
+    display: flex;
+    flex: 1;
+   
+    background-color: #0c509c;
+    color: white;
+    border: 1px black solid;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 1px #4b5b81;
+    padding: 10px 20px;
+    font-size: large;
+    
+}
+
+#logout-button:hover{
+    background-color: #083669;
+    color: white;
+    cursor: pointer;
+}
 
 #register-form{
     display: flex;
