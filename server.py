@@ -18,7 +18,7 @@ users_collections = db['users']
 
 class MyTCPHandler(socketserver.StreamRequestHandler):
 
-    
+     
 
     active_connections = []
     def handle(self):
@@ -26,15 +26,12 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         while True:
             #Note: strip() is used to remove the newline character at the end of the line
             line = self.rfile.readline()
-            
-            if not line or line == b'\r\n':
+            if line == b'\r\n':
                 break
             header_data += line
         
         content_length = 0 
-        
         for line in header_data.split(b'\r\n'):
-            # print(line.decode('utf-8'))
             if line.startswith(b'Content-Length: '):
                 content_length = int(line.split(b'Content-Length: ')[1])
                 break
@@ -42,21 +39,20 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
 
         if content_length > 0:
             body_data = self.rfile.read(content_length)
-            # print("Body:", body_data)
 
         # body_data = b'This is the body'
         request = Request(header_data, body_data)
-        print("Method: ", request.method)
-        print("URL: ", request.url)
-        print(request.protocol)
-        print("Headers: ", request.headers)
-        print("Body: ", request.body)
+        # print("Method: ", request.method)
+        # print("URL: ", request.url)
+        # print(request.protocol)
+        # print("Headers: ", request.headers)
+        # print("Body: ", request.body)
 
         # self.wfile.write(b"HTTP/1.1 200 OK\r\n")
 
         
         if request.url == b'/':
-            self.serve_homepage()
+            self.serve_homepage(request.headers)
         elif request.url.startswith(b'/public/'):
             self.serve_file(request.url.strip(b'/').decode('utf-8'))
         elif request.url == b'/send-message':
@@ -69,11 +65,34 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
             self.handle_login(request.body)
         elif request.url == b'/logout-user':
             self.logout()
+        elif request.url == b'/image-upload':
+            self.handle_image_upload(request.get_image_data(), request.headers)
+
         
             
 
-    def serve_homepage(self):
-        self.serve_file('public/index.html')
+    def serve_homepage(self, headers):
+        auth_token = self.get_auth_token(headers)
+        if auth_token:
+            print("User is logged in")
+            user_image_url = users_collections.find_one({"auth_token" : auth_token}, {'image_url': 1, '_id':0})
+            print("User Image URL: ", user_image_url)
+            if os.path.exists(user_image_url["image_url"]):
+                print("Image exists")
+                with open("public/index.html", 'rb') as file:
+                    print("Reading file")
+                    content = file.read()
+                    user_profile_image = f'<img id="user-image"  src=/{user_image_url["image_url"]} onclick ="upLoadImage()" alt="User Image" />'
+                    updated_content = content.replace(b'<!-- Image Element -->', user_profile_image.encode('utf-8'))
+                print("served homepage with image")
+                return self.send_response(updated_content,'text/html', len(updated_content) )
+                
+
+            
+        # with open('public/index.html', )
+        else:
+            print("User is not logged in")
+            return self.serve_file('public/index.html')
 
 
     def serve_file(self, file_path):
@@ -85,16 +104,16 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
                 # content_length = os.path.getsize(file_path)
                 self.send_response(content, mime_type, content_length)
 
-    def handle_send_message(self, request):
+    def handle_send_message(self, request: Request):
         data = json.loads(request.body.decode('utf-8'))
         # cookies = self.get_cookies(request.headers)
 
         # print("Cookie type: ", type(cookies))
         #Add random id to the message
 
-        cookies = self.get_cookies(request.headers)
-        
-        user_auth_token = cookies.get('auth_token', 0)
+        # cookies = self.get_cookies(request.headers)
+        # user_auth_token = cookies.get('auth_token', 0)
+        user_auth_token = self.get_auth_token(request.headers)
         if user_auth_token:
             user_data = users_collections.find_one({'auth_token': user_auth_token}, {'user_id' :1,'username': 1 ,'_id':0})
             data['user_id'] = user_data['user_id']  
@@ -139,7 +158,8 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         user_document = {
             'user_id': str(uuid.uuid4()),
             'username': user_register_data['r-username'],
-            'password': self.hash_password(user_register_data['r-password'])
+            'password': self.hash_password(user_register_data['r-password']),
+            'image_url': 'public/profile_pics/no_image.jpg'
         }
 
         users_collections.insert_one(user_document)
@@ -163,8 +183,25 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
             # auth_token_cookie = f'auth_token={auth_token}'
         return self.redirect('/', user_cookie )
 
+    def handle_image_upload(self, image_data, headers):
+        #might change get_cookie result to binary 
+        # auth_token = self.get_cookies(headers).get('auth_token', 0)
+        auth_token = self.get_auth_token(headers)
+        if auth_token:
+            user_data = users_collections.find_one({'auth_token': auth_token})
+            path = "./public/profile_pics"
 
- 
+            if not os.path.exists(path):
+                self.error_message({"message":"Folder not found"})
+
+            image_path = "public/profile_pics/user_image_" + user_data["username"]+ ".jpg"
+
+
+            with open(image_path, 'wb') as file:
+                file.write(image_data)
+            users_collections.update_one({"username": user_data["username"]}, {"$set":{"image_url" : image_path}})
+
+            self.send_200({"Message" : "Sucess"})
 
 
     def extract_submissions(self, body):
@@ -188,6 +225,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         self.wfile.write(b"\r\n")
         self.wfile.write(content)
         self.wfile.write(b"\r\n")
+
     
     # def send_cookies(self, cookies: dict):
     #     cookie_string = ""
@@ -227,7 +265,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         self.wfile.write(message.encode('utf-8'))
         self.wfile.write(b"\r\n")
 
-    def get_cookies(self, headers):
+    def get_cookies(self, headers) -> dict:
        
         cookie_obj = {}
         if b'Cookie' not in headers:
@@ -244,7 +282,17 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         for cookie in cookies_strings:
             key, value = cookie.split('=')
             cookie_obj[key] = value
-        return cookie_obj
+        return cookie_obj 
+    
+    def get_auth_token(self, headers) -> str:
+        cookies = self.get_cookies(headers)
+        if cookies.get('auth_token', 0):
+            return cookies['auth_token']
+        return None
+
+
+
+
     
     def hash_password(self, password):
         return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()

@@ -291,7 +291,14 @@ p:hover{
     max-width: 100%;
 }
 
-
+#user-image{
+    width: 50%;
+    height: 25%;
+    border-radius: 50%;
+    border: 1px black solid;
+    margin: 10px;
+    cursor: pointer;
+}
 
 #logout-button{
     display: flex;

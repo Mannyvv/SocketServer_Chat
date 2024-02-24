@@ -40,6 +40,29 @@ class Request:
             headers[key] = value
         
         return headers
+    def get_image_data(self):
+
+        content_type = self.headers.get(b'Content-Type', 0)
+
+        if not content_type or not b'multipart/form-data' in content_type:
+            print("No multipart/form-data")
+            return None
+        
+        boundary = content_type.split(b'boundary=')[1]
+
+        parts = self.body.split(b'--' + boundary)
+        print(parts[0])
+        # print(parts[1])
+        print(parts[2])
+        image_data = parts[1].split(b'\r\n\r\n')[1]
+        
+        print(len(image_data))
+        if image_data:
+            return image_data
+            
+        
+
+
     
     
   

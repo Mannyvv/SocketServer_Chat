@@ -107,16 +107,53 @@ const onLoad = () => {
     cookies = getCookies();
     
     if (cookies.loggedIn) {
+        document.getElementById('user-image').style.display = 'block'
         document.getElementById('logout-holder').style.display = 'block';
         document.getElementById('register-form').style.display = 'none';
         document.getElementById('login-form').style.display = 'none';
         user_id = cookies.loggedIn;
     }
     setInterval(getChatHistory, 30000);
-    
 
 }
 
+const upLoadImage = () => {
+    const userImage = document.getElementById('user-image');
+    
+    const userImageUpload = document.getElementById('user-image-upload');
+    userImageUpload.click();
+    userImageUpload.addEventListener('change',(event) => {
+        const imageFile = event.target.files[0];
+        if (imageFile){
+            sendImage(imageFile)
+
+        }
+    })
+}
+
+
+
+
+const sendImage = (imageFile) => {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    fetch('/image-upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Image uploaded successfully');
+            // Optionally, update the image displayed on the page
+        } else {
+            console.error('Failed to upload image');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
 const getChatHistory = () => {
 
@@ -158,6 +195,7 @@ const logout = () => {
         })
     location.reload();
     document.getElementById('logout-holder').style.display = 'none';
+    document.getElementById('user-image').style.display = 'none'
     document.getElementById('register-form').style.display = 'block';
     document.getElementById('login-form').style.display = 'block';
     

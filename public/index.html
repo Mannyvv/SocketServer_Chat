@@ -8,7 +8,7 @@
     <title>Socket Server - Python Chat</title>
     <link rel="stylesheet" type="text/css" href="public/index.css" />
 </head>
- 
+
 <body onload="onLoad()">
     <header class="header">
         <h1>Python Socket Server</h1>
@@ -112,6 +112,13 @@
 
         </div>
         <div class="register-login-section">
+            <!-- <img id="user-image" hidden  src="public/no_image.jpg" onclick="upLoadImage()" alt="User Image" /> -->
+            <!-- Image Element -->
+            <input id="user-image-upload" style="display: none;" type="file">
+            
+           
+              
+
             <div id="logout-holder" hidden>
                 <button id="logout-button" type="submit" onclick="logout()">Logout</button>
             </div>
@@ -133,8 +140,7 @@
                 <label id="username-label" for="username">Username:</label>
                 <input class="text-box id=" id="username" name="username" type="text" placeholder="Enter Username" />
                 <label id="password-label" for="password">Password:</label>
-                <input class="text-box" id="password" name="password" type="password"
-                    placeholder="Enter Password" />
+                <input class="text-box" id="password" name="password" type="password" placeholder="Enter Password" />
                 <input id="login" type="submit" value="Login" />
             </form>
 
