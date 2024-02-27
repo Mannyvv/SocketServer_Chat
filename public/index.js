@@ -16,8 +16,8 @@ const getCookies = () => {
 }
 
 const startWebSocket = () => {
-    const ws = new WebSocket('ws://localhost:8080');
-    ws.onopen = () => {
+    const webSocket = new WebSocket('ws://localhost:8080');
+    webSocket.onopen = () => {
         console.log('WebSocket Client Connected');
     };
 
@@ -124,7 +124,6 @@ const onLoad = () => {
 }
 
 const upLoadImage = () => {
-    const userImage = document.getElementById('user-image');
     
     const userImageUpload = document.getElementById('user-image-upload');
     userImageUpload.click();
@@ -135,6 +134,9 @@ const upLoadImage = () => {
 
         }
     })
+    
+
+
 }
 
 
@@ -151,7 +153,8 @@ const sendImage = (imageFile) => {
     .then(response => {
         if (response.ok) {
             console.log('Image uploaded successfully');
-            // Optionally, update the image displayed on the page
+            location.reload();
+
         } else {
             console.error('Failed to upload image');
         }
@@ -199,7 +202,7 @@ const logout = () => {
             console.log("Logged Out")
 
         })
-    location.reload();
+    // location.reload();
     document.getElementById('logout-holder').style.display = 'none';
     document.getElementById('user-image').style.display = 'none'
     document.getElementById('register-form').style.display = 'block';

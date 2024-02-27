@@ -66,7 +66,9 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         elif request.url == b'/logout-user':
             self.logout()
         elif request.url == b'/image-upload':
-            self.handle_image_upload(request.get_image_data(), request.headers)
+            self.handle_image_upload(request.get_image_data(), request.headers) 
+        elif request.url == b'/websocket':
+            self.handle_websocket(request)
 
         
             
@@ -201,7 +203,9 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
                 file.write(image_data)
             users_collections.update_one({"username": user_data["username"]}, {"$set":{"image_url" : image_path}})
 
-            self.send_200({"Message" : "Sucess"})
+        # return self.redirect('/')
+        return self.send_200({"message": "Image uploaded successfully"})
+
 
 
     def extract_submissions(self, body):

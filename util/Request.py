@@ -18,8 +18,8 @@ class Request:
         self.headers = self.get_headers(header_data)
         self.body = body_data
 
-        #Both methods could be made into one method, but I think 
-        #it's better to keep them separate for readability
+        ###Both methods could be made into one method, but I think### 
+        ###it's better to keep them separate for readability###
     def get_method_url_protocol(self, header_data):
         
         header_data_split = header_data.split(b'\r\n')
@@ -28,6 +28,8 @@ class Request:
         #Obtains CRUD method, URL, and protocol from first line e.g GET / HTTP/1.1
         method, url, protocol = header_data_split[0].split(b' ')
         return method, url, protocol
+    
+
     def get_headers(self, header_data):
         #Obtains headers from the request data after first line
         header_data_split = header_data.split(b'\r\n')
@@ -40,6 +42,8 @@ class Request:
             headers[key] = value
         
         return headers
+    
+
     def get_image_data(self):
 
         content_type = self.headers.get(b'Content-Type', 0)
@@ -51,22 +55,16 @@ class Request:
         boundary = content_type.split(b'boundary=')[1]
 
         parts = self.body.split(b'--' + boundary)
-        print(parts[0])
-        # print(parts[1])
-        print(parts[2])
+        
         image_data = parts[1].split(b'\r\n\r\n')[1]
         
-        print(len(image_data))
         if image_data:
             return image_data
-            
+        else:
+            print("No image data")
+            return None
         
-
 
     
     
   
-   
-
-    # def __str__(self):
-    #     return f"Request(method={self.method}, url={self.url}, headers={self.headers}, body={self.body})"

@@ -115,14 +115,10 @@
             <!-- <img id="user-image" hidden  src="public/no_image.jpg" onclick="upLoadImage()" alt="User Image" /> -->
             <!-- Image Element -->
             <input id="user-image-upload" style="display: none;" type="file">
-            
-           
-              
-
-            <div id="logout-holder" hidden>
+            <div id="logout-holder" style="display: none;">
                 <button id="logout-button" type="submit" onclick="logout()">Logout</button>
             </div>
-            <form id="register-form" hidden onsubmit="registerForm()" method="post" action="/register-user">
+            <form id="register-form" style="display: none;" onsubmit="registerForm()" method="post" action="/register-user">
                 <h1>Register User</h1>
                 <label id="r-username-label" for="r-username">Username:</label>
                 <input class="text-box id=" id="r-username" name="r-username" type="text"
@@ -135,7 +131,7 @@
 
 
 
-            <form id="login-form" hidden onsubmit="loginForm()" method="post" action="/login-user">
+            <form id="login-form" style="display: none;" onsubmit="loginForm()" method="post" action="/login-user">
                 <h1>Login</h1>
                 <label id="username-label" for="username">Username:</label>
                 <input class="text-box id=" id="username" name="username" type="text" placeholder="Enter Username" />
