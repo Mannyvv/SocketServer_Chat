@@ -15,7 +15,13 @@ const getCookies = () => {
     return cookieObj; 
 }
 
+const startWebSocket = () => {
+    const ws = new WebSocket('ws://localhost:8080');
+    ws.onopen = () => {
+        console.log('WebSocket Client Connected');
+    };
 
+}
 const registerForm = () => {
 
     //Not sure if I should use this or stay with the form subsission
