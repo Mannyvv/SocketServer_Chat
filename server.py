@@ -8,7 +8,8 @@ from pymongo import MongoClient
 import uuid
 import datetime
 import bcrypt
-
+import hashlib
+import base64
 client = MongoClient('localhost', 27017)
 db = client['SocketServer_DB']
 chat_history_collection = db['chat_history']
@@ -155,7 +156,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         user_register_data = self.extract_submissions(body)
 
         if not user_register_data.get('r-username') or not user_register_data.get('r-password'):
-            return self.error_message("Username and password are required")
+            return self.send_400("Username and password are required")
 
         user_document = {
             'user_id': str(uuid.uuid4()),
@@ -171,12 +172,12 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         user_login_data = self.extract_submissions(body)
 
         if not user_login_data.get('username') or not user_login_data.get('password'):
-            return self.error_message("Username and password are required")
+            return self.send_400("Username and password are required")
 
         user_data= users_collections.find_one({'username': user_login_data['username']}, {'password': 1, 'user_id':1, '_id': 0})
         
         if not user_data:
-            return self.error_message("Invalid username or password")
+            return self.send_400("Invalid username or password")
         
         if bcrypt.checkpw(user_login_data['password'].encode(), user_data['password'].encode()):
             auth_token = str(uuid.uuid4())
@@ -194,7 +195,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
             path = "./public/profile_pics"
 
             if not os.path.exists(path):
-                self.error_message({"message":"Folder not found"})
+                self.send_400({"message":"Folder not found"})
 
             image_path = "public/profile_pics/user_image_" + user_data["username"]+ ".jpg"
 
@@ -205,6 +206,135 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
 
         # return self.redirect('/')
         return self.send_200({"message": "Image uploaded successfully"})
+    
+    def handle_websocket(self, request):
+
+        headers = request.headers
+        wb_handshake = self.websocket_handshake(headers)
+        if wb_handshake:
+            self.active_connections.append(self)
+
+            # #Not sure why I'm not reading out the bytes in the frames
+            # print("Active connections: ", len(self.active_connections))
+            # self.wfile.write(b"Connected")
+            # while True:
+            #     try:
+            #         message = self.rfile.read(1024)
+            #         print("Message: ", message)
+            #         for connection in self.active_connections:
+            #             if connection != self:
+            #                 connection.wfile.write(message)
+            #     except Exception as e:
+            #         print("Error: ", e)
+            #         self.active_connections.remove(self)
+            #         break
+            try:
+                while True:
+                    try:
+                        frame_data= self.read_ws_frame()
+                        if frame_data is None:
+                            break
+                        opcode, masking_key, payload_data = frame_data
+                        unmasked_payload_data = self.parse_ws_frame(masking_key,payload_data)
+                        payload = json.loads(unmasked_payload_data)
+                        request.body = payload
+                        self.process_payload(request)
+                    except Exception as e:
+                        print(f"Exception in frame processing: {e}")
+                        continue
+            except Exception as e:
+                print(f"Exception in WebSocket connection handling: {e}")
+
+            finally:
+                self.cleanup_connection()
+                if self in self.active_connections:
+                    self.active_connections.remove(self)
+                
+
+    def read_ws_frame(self):
+
+        frame_header = self.rfile.read(2)
+
+        if not frame_header or len(frame_header) < 2:
+            return None
+        
+        first_byte, second_byte = frame_header
+        fin_bit = (first_byte & 0x80 ) == 0x80
+        opcode = first_byte & 0x0F
+
+        #0x00: Continuation Frame, 0x01: Text Frame(UTF-8 text data), 0x08: Close frame
+        if opcode not in [0x00, 0x01, 0x08]:
+            return None
+
+        rsv = (first_byte & 0x70)
+        if rsv != 0 :
+            print("RSV bits not 000")
+            return None
+
+        if opcode == 0x8:
+            return None
+
+        mask_bit = second_byte & 0x80
+
+        #if 0-125 then payload_length already set
+        payload_length = second_byte & 0x7F
+
+        if payload_length == 126:
+            payload_length_bytes = self.rfile.read(2)
+            #payload_length is a 16 bit integer
+            payload_length = (payload_length_bytes[0] << 8) + payload_length_bytes[1]
+        elif payload_length == 127:
+            payload_length_bytes = self.rfile.read(8)
+            payload_length = 0
+            #payload_length is a 64 bit integer
+            for byte in payload_length_bytes:
+                payload_length = (payload_length << 8) + byte
+        
+        masking_key = None
+        if mask_bit:
+            masking_key = self.rfile.read(4)
+
+        payload_data = b""
+        if payload_length > 0:
+            payload_data = self.rfile.read(payload_length)
+
+        return opcode, masking_key, payload_data
+
+    def parse_ws_frame(self, masking_key, payload_data):
+        if masking_key:
+            unmasked_payload = bytearray()
+            for i in range(len(payload_data)):
+                unmasked_payload.append(payload_data[i] ^ masking_key[i % 4])
+            payload_data = unmasked_payload
+        return payload_data.decode()
+    
+    def process_payload(self, request):
+        if request.body.get('messageType') == 'chatMessage':
+            self.handle_send_message(request)
+    
+    def cleanup_connection(self):
+        if self in MyTCPHandler.active_connections:
+            MyTCPHandler.active_connections.remove(self)
+
+
+
+
+
+    def websocket_handshake(self, headers):
+        #  TODO: Might have to  check host and origin in headers
+        if b'Upgrade' in headers and headers[b'Upgrade'] == b'websocket':
+            key = headers[b'Sec-WebSocket-Key']
+            GUIID = b"258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+            hash_key = key + GUIID
+            response_key = base64.b64encode(hashlib.sha1(hash_key).digest())
+            self.wfile.write(b"HTTP/1.1 101 Switching Protocols\r\n")
+            self.wfile.write(b"Upgrade: websocket\r\n")
+            self.wfile.write(b"Connection: Upgrade\r\n")
+            self.wfile.write(f"Sec-WebSocket-Accept: {response_key.decode()}\r\n".encode())
+            return True
+        else:
+            self.send_400("Invalid request")
+            return False
 
 
 
@@ -261,12 +391,13 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         self.wfile.write(json.dumps(content).encode('utf-8'))
         self.wfile.write(b"\r\n")
 
-    def error_message(self, message):
+    def send_400(self, message = None):
         self.wfile.write(b"HTTP/1.1 400 Bad Request\r\n")
-        self.wfile.write(b"Content-Type: text/html\r\n")
-        self.wfile.write(f"Content-Length: {len(message)}\r\n".encode('utf-8'))
-        self.wfile.write(b"\r\n")
-        self.wfile.write(message.encode('utf-8'))
+        if message:
+            self.wfile.write(b"Content-Type: text/html\r\n")
+            self.wfile.write(f"Content-Length: {len(message)}\r\n".encode('utf-8'))
+            self.wfile.write(b"\r\n")
+            self.wfile.write(message.encode('utf-8'))
         self.wfile.write(b"\r\n")
 
     def get_cookies(self, headers) -> dict:
@@ -295,9 +426,6 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         return None
 
 
-
-
-    
     def hash_password(self, password):
         return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 if __name__ == "__main__":
