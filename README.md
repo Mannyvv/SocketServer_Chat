@@ -14,6 +14,7 @@ Welcome to the Python Socket Server project! This project provides an example fo
 - Live user online status to see who's online or offline.
 - Clean user input from HTML or SQL injections.
 - Private messaging between users.
+- User NGINX server for one point of contact.
 
 ## Technologies Used
 - **Python:** The server-side logic is powered by Python.

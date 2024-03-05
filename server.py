@@ -12,23 +12,13 @@ import hashlib
 import base64
 import html 
 
-# from dotenv import load_dotenv
-# load_dotenv()
-# mongo_db_uri = os.getenv('MONGO_DB_URI')
-# client = MongoClient(mongo_db_uri)
-
-
-# mongo_db_uri = os.getenv('MONGO_DB_URI')
+#DB open to all for testing
 client = MongoClient("mongodb+srv://Site-User:lNuFm2TRB5MEp69w@socketserver.fpo5nxp.mongodb.net/?retryWrites=true&w=majority&appName=SocketServer")
 db = client['SocketServer_DB']
 chat_history_collection = db['chat_history']
 users_collections = db['users']
 
-
-
 class MyTCPHandler(socketserver.StreamRequestHandler):
-
-     
 
     active_connections = []
     def handle(self):
@@ -50,16 +40,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         if content_length > 0:
             body_data = self.rfile.read(content_length)
 
-        # body_data = b'This is the body'
         request = Request(header_data, body_data)
-        # print("Method: ", request.method)
-        # print("URL: ", request.url)
-        # print(request.protocol)
-        # print("Headers: ", request.headers)
-        # print("Body: ", request.body)
-
-        # self.wfile.write(b"HTTP/1.1 200 OK\r\n")
-
         
         if request.url == b'/':
             self.serve_homepage(request.headers)
@@ -86,24 +67,14 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
     def serve_homepage(self, headers):
         auth_token = self.get_auth_token(headers)
         if auth_token:
-         
             user_image_url = users_collections.find_one({"auth_token" : auth_token}, {'image_url': 1, '_id':0})
-           
             if os.path.exists(user_image_url["image_url"]):
-               
                 with open("public/index.html", 'rb') as file:
-                 
                     content = file.read()
                     user_profile_image = f'<img id="user-image"  src=/{user_image_url["image_url"]} onclick ="upLoadImage()" alt="User Image" />'
                     updated_content = content.replace(b'<!-- Image Element -->', user_profile_image.encode('utf-8'))
-          
                 return self.send_response(updated_content,'text/html', len(updated_content) )
-                
-
-            
-        # with open('public/index.html', )
         else:
-          
             return self.serve_file('public/index.html')
 
 
@@ -122,14 +93,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
             data = request.body
         else:
             data = json.loads(request.body.decode('utf-8'))
-        
-        # cookies = self.get_cookies(request.headers)
-
-        # print("Cookie type: ", type(cookies))
-        #Add random id to the message
-
-        # cookies = self.get_cookies(request.headers)
-        # user_auth_token = cookies.get('auth_token', 0)
+    
         user_auth_token = self.get_auth_token(request.headers)
         if user_auth_token:
             user_data = users_collections.find_one({'auth_token': user_auth_token}, {'user_id' :1,'username': 1 ,'_id':0})
@@ -211,7 +175,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
             auth_token = str(uuid.uuid4())
             users_collections.update_one({'username': user_login_data['username']}, {'$set': {'auth_token':auth_token}})
             user_cookie = { "auth_token": auth_token, "user_id": user_data['user_id']}
-            # auth_token_cookie = f'auth_token={auth_token}'
+            
         return self.redirect('/', user_cookie )
 
     def handle_image_upload(self, image_data, headers):
@@ -224,15 +188,11 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
 
             if not os.path.exists(path):
                 self.send_400({"message":"Folder not found"})
-
             image_path = "public/profile_pics/user_image_" + user_data["username"]+ ".jpg"
-
-
             with open(image_path, 'wb') as file:
                 file.write(image_data)
             users_collections.update_one({"username": user_data["username"]}, {"$set":{"image_url" : image_path}})
 
-        # return self.redirect('/')
         return self.send_200({"message": "Image uploaded successfully"})
     
     def handle_websocket(self, request):
@@ -243,20 +203,6 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         if wb_handshake:
             self.active_connections.append(self)
 
-            # #Not sure why I'm not reading out the bytes in the frames
-            # print("Active connections: ", len(self.active_connections))
-            # self.wfile.write(b"Connected")
-            # while True:
-            #     try:
-            #         message = self.rfile.read(1024)
-            #         print("Message: ", message)
-            #         for connection in self.active_connections:
-            #             if connection != self:
-            #                 connection.wfile.write(message)
-            #     except Exception as e:
-            #         print("Error: ", e)
-            #         self.active_connections.remove(self)
-            #         break
             try:
                 while True:
                     try:
@@ -283,10 +229,8 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
     def read_ws_frame(self):
 
         frame_header = self.rfile.read(2)
-
         if not frame_header or len(frame_header) < 2:
             return None
-        
         first_byte, second_byte = frame_header
         fin_bit = (first_byte & 0x80 ) == 0x80
         opcode = first_byte & 0x0F
@@ -394,8 +338,6 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
             self.send_400("Invalid request")
             return False
 
-
-
     def extract_submissions(self, body):
         user_data = {}
         parts = body.split(b'&')
@@ -406,9 +348,6 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         return user_data
 
 
-
-        # b'r-username=gd&r-password=dfgfd'
-
     def send_response(self, content, mime_type, content_length):
         #might use self.request.sendall() instead of self.wfile.write()
         self.wfile.write(b"HTTP/1.1 200 OK\r\n")
@@ -418,12 +357,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         self.wfile.write(content)
         self.wfile.write(b"\r\n")
 
-    
-    # def send_cookies(self, cookies: dict):
-    #     cookie_string = ""
-    #     for key, value in cookies.items():
-    #         cookie_string += f"{key}={value}; "
-    #     self.wfile.write(f"Set-Cookie: {cookie_string}\r\n".encode('utf-8'))
+  
     def redirect(self, url, cookie=None, logout=False):
         self.wfile.write(b"HTTP/1.1 302 Found\r\n")
         self.wfile.write(f"Location: {url}\r\n".encode('utf-8'))
@@ -438,12 +372,6 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
 
     def logout(self):
         print("Logging out")
-        # self.wfile.write(b"HTTP/1.1 303 See Other\r\n")
-        # self.wfile.write(b"Location: /\r\n")
-        # self.wfile.write(b"Set-Cookie: loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;\r\n")
-        # self.wfile.write(b"Set-Cookie: auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;\r\n")
-        # self.wfile.write(b"\r\n")
-        
         return self.redirect('/',logout=True)
 
     def send_200(self, content):
@@ -469,13 +397,6 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         if b'Cookie' not in headers:
             return cookie_obj
         cookies = headers[b'Cookie'].decode('utf-8')
-        # for header in headers:
-        #     if header.startswith(b'Cookie: '):
-        #         cookie_string = header.split(b'Cookie: ')[1].decode('utf-8')
-        #         cookie_strings = cookie_string.split('; ')
-        #         for cookie in cookie_strings:
-        #             key, value = cookie.split('=')
-        #             cookies[key] = value
         cookies_strings = cookies.split('; ')
         for cookie in cookies_strings:
             key, value = cookie.split('=')
@@ -491,6 +412,9 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
 
     def hash_password(self, password):
         return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    
+
+    
 if __name__ == "__main__":
     host = "0.0.0.0"
     port = int(os.environ.get('PORT', 8080))
