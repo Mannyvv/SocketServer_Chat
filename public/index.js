@@ -1,6 +1,7 @@
 
 let username = "Guest";
 let user_id = null;
+let webSocket = null;
 
 const getCookies = () => {
     const cookies = document.cookie.split(';');
@@ -15,13 +16,35 @@ const getCookies = () => {
     return cookieObj; 
 }
 
-const startWebSocket = () => {
-    const webSocket = new WebSocket('ws://localhost:8080');
-    webSocket.onopen = () => {
-        console.log('WebSocket Client Connected');
-    };
+// const startWebSocket = () => {
+//     // const webSocket = new WebSocket('ws://localhost:8080');
+//     // webSocket = new WebSocket('ws://' + window.location.host + '/websocket');
+//     webSocket = new WebSocket(`ws://localhost:${PORT}/websocket`);
 
-}
+//     // webSocket.onopen = () => {
+//     //     console.log('WebSocket Client Connected');
+//     // };
+
+//     webSocket.onmessage = (ws_message) => {
+//         const message = JSON.parse(ws_message.data);
+//         const messageType = message.messageType
+
+//         if (messageType === 'chatMessage') {
+//             addToChatWindow(message);
+//         }else{
+//             console.log("Issue with message type")
+//         }
+//     }
+
+//     // webSocket.onopen = () => {
+//     //     console.log("Websocket connection established")
+//     // }
+
+//     webSocket.addEventListener('open', function (event) {
+//         console.log('WebSocket connection established');
+//     });
+
+// }
 const registerForm = () => {
 
     //Not sure if I should use this or stay with the form subsission
@@ -46,7 +69,7 @@ const registerForm = () => {
     //     .catch(error => {
     //         console.error('Error:', error);
     //     });
-
+    alert("Successfully Registered") 
 }
 
 const loginForm = () => {
@@ -57,14 +80,22 @@ const loginForm = () => {
 
 const sendMessage = () => {
     const message = document.getElementById('text-box').value;
+
+    const wb_message = {
+        messageType: 'chatMessage',
+        message: message,
+        username: username
+    }
     
-    
+    // webSocket.send(JSON.stringify(wb_message))
+
     fetch('/send-message', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ username: username, message: message })
+        // body: JSON.stringify({ username: username, message: message })
+        body: JSON.stringify(wb_message)
     })
         .then((response) => {
             // When sending a message, the response
@@ -100,7 +131,7 @@ const addToChatWindow = (data) => {
     chatWindowBody.lastChild.scrollIntoView();
 
 
-}
+} 
 
 const onLoad = () => {
     getChatHistory();
@@ -109,6 +140,7 @@ const onLoad = () => {
             sendMessage();
         }
     });
+    // startWebSocket();
 
     cookies = getCookies();
     
@@ -118,8 +150,11 @@ const onLoad = () => {
         document.getElementById('register-form').style.display = 'none';
         document.getElementById('login-form').style.display = 'none';
         user_id = cookies.loggedIn;
+    }else{
+        document.getElementById('register-form').style.display = 'block';
+        document.getElementById('login-form').style.display = 'block';
     }
-    setInterval(getChatHistory, 30000);
+    setInterval(getChatHistory, 2000);
 
 }
 
@@ -195,18 +230,19 @@ const getChatHistory = () => {
 
 const logout = () => {
     fetch('/logout-user', {
-        method: 'GET',
-        
+        method: 'POST',
         
     }).then((response) => {
             console.log("Logged Out")
+            window.location.reload();
+
 
         })
-    // location.reload();
-    document.getElementById('logout-holder').style.display = 'none';
-    document.getElementById('user-image').style.display = 'none'
-    document.getElementById('register-form').style.display = 'block';
-    document.getElementById('login-form').style.display = 'block';
+        document.getElementById('logout-holder').style.display = 'none';
+        document.getElementById('user-image').style.display = 'none'
+        document.getElementById('register-form').style.display = 'block';
+        document.getElementById('login-form').style.display = 'block';
+
     
 }
 

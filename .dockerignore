@@ -1,0 +1,14 @@
+# Exclude Python bytecode files
+__pycache__/
+*.pyc
+
+# Exclude virtual environment directories
+venv/
+
+
+nginx/
+
+.env
+
+docker-compose.yml
+

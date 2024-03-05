@@ -10,7 +10,16 @@ import datetime
 import bcrypt
 import hashlib
 import base64
-client = MongoClient('localhost', 27017)
+import html 
+
+# from dotenv import load_dotenv
+# load_dotenv()
+# mongo_db_uri = os.getenv('MONGO_DB_URI')
+# client = MongoClient(mongo_db_uri)
+
+
+# mongo_db_uri = os.getenv('MONGO_DB_URI')
+client = MongoClient("mongodb+srv://Site-User:lNuFm2TRB5MEp69w@socketserver.fpo5nxp.mongodb.net/?retryWrites=true&w=majority&appName=SocketServer")
 db = client['SocketServer_DB']
 chat_history_collection = db['chat_history']
 users_collections = db['users']
@@ -77,24 +86,24 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
     def serve_homepage(self, headers):
         auth_token = self.get_auth_token(headers)
         if auth_token:
-            print("User is logged in")
+         
             user_image_url = users_collections.find_one({"auth_token" : auth_token}, {'image_url': 1, '_id':0})
-            print("User Image URL: ", user_image_url)
+           
             if os.path.exists(user_image_url["image_url"]):
-                print("Image exists")
+               
                 with open("public/index.html", 'rb') as file:
-                    print("Reading file")
+                 
                     content = file.read()
                     user_profile_image = f'<img id="user-image"  src=/{user_image_url["image_url"]} onclick ="upLoadImage()" alt="User Image" />'
                     updated_content = content.replace(b'<!-- Image Element -->', user_profile_image.encode('utf-8'))
-                print("served homepage with image")
+          
                 return self.send_response(updated_content,'text/html', len(updated_content) )
                 
 
             
         # with open('public/index.html', )
         else:
-            print("User is not logged in")
+          
             return self.serve_file('public/index.html')
 
 
@@ -108,7 +117,12 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
                 self.send_response(content, mime_type, content_length)
 
     def handle_send_message(self, request: Request):
-        data = json.loads(request.body.decode('utf-8'))
+       
+        if isinstance(request.body,dict) :
+            data = request.body
+        else:
+            data = json.loads(request.body.decode('utf-8'))
+        
         # cookies = self.get_cookies(request.headers)
 
         # print("Cookie type: ", type(cookies))
@@ -121,6 +135,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
             user_data = users_collections.find_one({'auth_token': user_auth_token}, {'user_id' :1,'username': 1 ,'_id':0})
             data['user_id'] = user_data['user_id']  
             data['username'] = user_data['username']
+            data['message'] = html.escape(data['message']).replace("\n", "")
         else:
             data['user_id'] = "Guest"
             data['username'] = "Guest"
@@ -134,23 +149,36 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         new_data = data.copy()
         new_data["date"] = datetime.datetime.now().strftime("%m-%d-%Y")
         new_data["time"] = datetime.datetime.now().strftime("%I:%M %p")
+        new_data["messageType"] = "chatMessage"
+        new_data["message"] = html.escape(new_data["message"]).replace("\n", "")
 
         try:
             chat_history_collection.insert_one(data)
         except Exception as e:
             print("Error inserting message:", e)
             return
-
+        broadcast_payload = new_data
+        # self.broadcast_message(broadcast_payload)
         json_data = json.dumps(new_data)
         content_length = len(json_data)
         self.send_response(json_data.encode(), "application/json", content_length)
 
 
+
+    # def handle_chat_history(self, request):
+    #     chat_messages = list(chat_history_collection.find({}, {"_id": 0}))
+    #     for message in chat_messages:
+    #         message["message"] = html.escape(message["message"]).replace("\n", "")
+    #     json_data = json.dumps(chat_messages)
+    #     content_length = len(json_data)
+    #     self.send_response(json_data.encode(), "application/json", content_length)
+        
     def handle_chat_history(self, request):
         chat_messages = list(chat_history_collection.find({}, {"_id": 0}))
         json_data = json.dumps(chat_messages)
         content_length = len(json_data)
         self.send_response(json_data.encode(), "application/json", content_length)
+
     
     def handle_register_user(self, body):
         user_register_data = self.extract_submissions(body)
@@ -211,6 +239,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
 
         headers = request.headers
         wb_handshake = self.websocket_handshake(headers)
+        
         if wb_handshake:
             self.active_connections.append(self)
 
@@ -311,26 +340,55 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
     def process_payload(self, request):
         if request.body.get('messageType') == 'chatMessage':
             self.handle_send_message(request)
+
+    def broadcast_message(self, message_payload):
+        formatted_message = json.dumps(message_payload)
+        encoded_message = formatted_message.encode('utf-8')
+
+        for connection in MyTCPHandler.active_connections:
+            try:
+                # First byte: Fin bit (1) and opcode (1 for text)
+                frame = bytearray([0x81])
+
+                # Second byte: Payload length
+                frame_length = len(encoded_message)
+                if frame_length <= 125:
+                    frame.append(frame_length)
+                elif frame_length <= 65535:
+                    frame.append(126)
+                    frame.extend([(frame_length >> 8) & 0xFF, frame_length & 0xFF])
+                else:
+                    frame.append(127)
+                    for i in range(7, -1, -1):
+                        frame.append((frame_length >> (i * 8)) & 0xFF)
+
+                # Append the actual message
+                frame.extend(encoded_message)
+
+                # Send the frame over the socket
+                connection.request.sendall(frame)
+
+                print(f"Sent message to {connection}")
+            except Exception as e:
+                print(f"Error broadcasting message to {connection}: {e}")
     
     def cleanup_connection(self):
         if self in MyTCPHandler.active_connections:
             MyTCPHandler.active_connections.remove(self)
 
 
-
-
-
     def websocket_handshake(self, headers):
         #  TODO: Might have to  check host and origin in headers
         if b'Upgrade' in headers and headers[b'Upgrade'] == b'websocket':
             key = headers[b'Sec-WebSocket-Key']
+            print("websocket key: ", key)
             GUIID = b"258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
             hash_key = key + GUIID
             response_key = base64.b64encode(hashlib.sha1(hash_key).digest())
             self.wfile.write(b"HTTP/1.1 101 Switching Protocols\r\n")
             self.wfile.write(b"Upgrade: websocket\r\n")
             self.wfile.write(b"Connection: Upgrade\r\n")
-            self.wfile.write(f"Sec-WebSocket-Accept: {response_key.decode()}\r\n".encode())
+            self.wfile.write(f"Sec-WebSocket-Accept: {response_key.decode()}\r\n\r\n".encode())
             return True
         else:
             self.send_400("Invalid request")
@@ -366,22 +424,27 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
     #     for key, value in cookies.items():
     #         cookie_string += f"{key}={value}; "
     #     self.wfile.write(f"Set-Cookie: {cookie_string}\r\n".encode('utf-8'))
-    def redirect(self, url, cookie=None):
+    def redirect(self, url, cookie=None, logout=False):
         self.wfile.write(b"HTTP/1.1 302 Found\r\n")
         self.wfile.write(f"Location: {url}\r\n".encode('utf-8'))
         if cookie:
             self.wfile.write(f'Set-Cookie: auth_token={cookie["auth_token"]}; Path=/; HttpOnly; Max-Age=3600\r\n'.encode('utf-8'))
             self.wfile.write(f'Set-Cookie: loggedIn={cookie["user_id"]}; Path=/; Max-Age=3600\r\n'.encode('utf-8'))
+
+        if logout:
+            self.wfile.write(b"Set-Cookie: loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;\r\n")
+            self.wfile.write(b"Set-Cookie: auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;\r\n")
         self.wfile.write(b"\r\n")
 
     def logout(self):
         print("Logging out")
-        self.wfile.write(b"HTTP/1.1 303 See Other\r\n")
-        self.wfile.write(b"Location: /\r\n")
-        self.wfile.write(b"Set-Cookie: loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;\r\n")
-        self.wfile.write(b"Set-Cookie: auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;\r\n")
-        self.wfile.write(b"\r\n")
-        # self.redirect('/')
+        # self.wfile.write(b"HTTP/1.1 303 See Other\r\n")
+        # self.wfile.write(b"Location: /\r\n")
+        # self.wfile.write(b"Set-Cookie: loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;\r\n")
+        # self.wfile.write(b"Set-Cookie: auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;\r\n")
+        # self.wfile.write(b"\r\n")
+        
+        return self.redirect('/',logout=True)
 
     def send_200(self, content):
         self.wfile.write(b"HTTP/1.1 200 OK\r\n")
@@ -430,7 +493,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 if __name__ == "__main__":
     host = "0.0.0.0"
-    port = 8080
+    port = int(os.environ.get('PORT', 8080))
 
     socketserver.ThreadingTCPServer.allow_reuse_address = True
 

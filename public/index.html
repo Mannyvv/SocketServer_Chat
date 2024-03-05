@@ -22,7 +22,7 @@
     <div class="container1">
         <div class="users-list-section">
             <div id="user-list">
-                <h1 id="user-list-title">Users</h1>
+                <h3 id="user-list-title"><i>(Upcoming Feature)</i></h3>
                 <ul id="user-list-body">
                     <!-- TODO: Add users here -->
                     <li class="user-list-item">User<div class="green-circle"></div>
@@ -97,15 +97,6 @@
                     between incoming and users chat. Make screen scrollable -->
                 <h1 id="chat-window-title">Chat</h1>
                 <ul id="chat-window-body">
-                    <!-- <li class="chat-window-item">user2: Hi</li>
-                    <li class="chat-window-item">user3: How are you?</li>
-                    <li class="chat-window-item">user4: I am fine</li>
-                    <li class="chat-window-item logged-user-message">user1: Hello</li>
-                    <li class="chat-window-item">user5: How about you?</li>
-                
-                    <li class="chat-window-item">user3: How are you?</li>
-                    <li class="chat-window-item logged-user-message">user1: Hello</li>
-                    <li class="chat-window-item">user4: I am fine</li> -->
 
                 </ul>
             </div>
@@ -118,14 +109,17 @@
             <div id="logout-holder" style="display: none;">
                 <button id="logout-button" type="submit" onclick="logout()">Logout</button>
             </div>
-            <form id="register-form" style="display: none;" onsubmit="registerForm()" method="post" action="/register-user">
+            <form id="register-form" style="display: none;" onsubmit="registerForm()" method="post"
+                action="/register-user">
                 <h1>Register User</h1>
                 <label id="r-username-label" for="r-username">Username:</label>
                 <input class="text-box id=" id="r-username" name="r-username" type="text"
                     placeholder="Create Username" />
+                <br>
                 <label id="r-password-lable" for="r-password">Password:</label>
                 <input class="text-box" id="r-password" name="r-password" type="password"
                     placeholder="Create Password" />
+                <br>
                 <input id="register" type="submit" value="Register" />
             </form>
 
@@ -135,8 +129,11 @@
                 <h1>Login</h1>
                 <label id="username-label" for="username">Username:</label>
                 <input class="text-box id=" id="username" name="username" type="text" placeholder="Enter Username" />
+                <br>
+
                 <label id="password-label" for="password">Password:</label>
                 <input class="text-box" id="password" name="password" type="password" placeholder="Enter Password" />
+                <br>
                 <input id="login" type="submit" value="Login" />
             </form>
 
