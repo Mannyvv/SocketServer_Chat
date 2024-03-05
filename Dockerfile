@@ -2,7 +2,7 @@
 FROM python:3.8
 
 # Set environment variable for MongoDB URI
-ENV MONGO_DB_URI="mongodb+srv://Site-User:lNuFm2TRB5MEp69w@socketserver.fpo5nxp.mongodb.net/?retryWrites=true&w=majority&appName=SocketServer"
+
 
 # Set up working directory
 WORKDIR /app

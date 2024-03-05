@@ -13,7 +13,8 @@ import base64
 import html 
 
 #DB open to all for testing
-client = MongoClient("mongodb+srv://Site-User:lNuFm2TRB5MEp69w@socketserver.fpo5nxp.mongodb.net/?retryWrites=true&w=majority&appName=SocketServer")
+mongo_uri = os.getenv("MONGO_DB_URI")
+client = MongoClient("mongo_uri")
 db = client['SocketServer_DB']
 chat_history_collection = db['chat_history']
 users_collections = db['users']
