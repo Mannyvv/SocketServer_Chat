@@ -14,7 +14,7 @@ import html
 
 #DB open to all for testing
 mongo_uri = os.getenv("MONGO_DB_URI")
-client = MongoClient("mongo_uri")
+client = MongoClient(mongo_uri)
 db = client['SocketServer_DB']
 chat_history_collection = db['chat_history']
 users_collections = db['users']
@@ -176,7 +176,9 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
             auth_token = str(uuid.uuid4())
             users_collections.update_one({'username': user_login_data['username']}, {'$set': {'auth_token':auth_token}})
             user_cookie = { "auth_token": auth_token, "user_id": user_data['user_id']}
-            
+        else:
+            return self.send_400("Invalid username or password")
+        
         return self.redirect('/', user_cookie )
 
     def handle_image_upload(self, image_data, headers):

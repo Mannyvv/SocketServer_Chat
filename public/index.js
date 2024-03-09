@@ -141,7 +141,6 @@ const onLoad = () => {
         }
     });
     // startWebSocket();
-
     cookies = getCookies();
     
     if (cookies.loggedIn) {
