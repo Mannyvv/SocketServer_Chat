@@ -26,13 +26,12 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
     active_connections = []
     def handle(self):
 
-        if len(MyTCPHandler.active_connections) >= 5:
+        if len(MyTCPHandler.active_connections) >= 50:
             self.send_400("Connection limit reached")
             self.request.close()
             return
         
         MyTCPHandler.active_connections.append(self)
-
 
         header_data = b''
         while True:
@@ -73,6 +72,11 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         elif request.url == b'/websocket':
             self.handle_websocket(request)
 
+        if self in self.active_connections:
+            self.active_connections.remove(self)
+
+        # Close the connection
+        self.request.close()
         
             
 
