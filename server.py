@@ -2,6 +2,7 @@ import socketserver
 import sys
 from util.request import Request
 import os
+import dotenv
 import json
 import mimetypes
 from pymongo import MongoClient
@@ -13,7 +14,8 @@ import base64
 import html 
 
 #DB open to all for testing
-mongo_uri = os.getenv("MONGO_DB_URI")
+dotenv.load_dotenv()
+mongo_uri = os.getenv("MONGO_DB_URI", "Did not find key")  
 client = MongoClient(mongo_uri)
 db = client['SocketServer_DB']
 chat_history_collection = db['chat_history']
