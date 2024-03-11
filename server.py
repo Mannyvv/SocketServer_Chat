@@ -80,6 +80,8 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
 
 
     def serve_file(self, file_path):
+        if ".." in file_path:
+            return self.send_400("Unauthorized Action")
         if os.path.exists(file_path):
             with open(file_path, 'rb') as file:
                 content = file.read()
