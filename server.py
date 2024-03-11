@@ -25,6 +25,15 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
 
     active_connections = []
     def handle(self):
+
+        if len(MyTCPHandler.active_connections) >= 5:
+            self.send_400("Connection limit reached")
+            self.request.close()
+            return
+        
+        MyTCPHandler.active_connections.append(self)
+
+
         header_data = b''
         while True:
             #Note: strip() is used to remove the newline character at the end of the line
