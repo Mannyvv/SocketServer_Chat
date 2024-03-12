@@ -2,8 +2,8 @@ Upload to heroku
 
 heroku login
 
-docker build -t websocket-app-v12 .
-docker tag websocket-app-v12 registry.heroku.com/python-socket-server/web
+docker build -t websocket-app-v13 .
+docker tag websocket-app-v13 registry.heroku.com/python-socket-server/web
 heroku container:login
 docker push registry.heroku.com/python-socket-server/web
 

@@ -407,14 +407,18 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         self.wfile.write(json.dumps(content).encode('utf-8'))
         self.wfile.write(b"\r\n")
 
-    def send_400(self, message = None):
-        self.wfile.write(b"HTTP/1.1 400 Bad Request\r\n")
-        if message:
-            self.wfile.write(b"Content-Type: text/html\r\n")
-            self.wfile.write(f"Content-Length: {len(message)}\r\n".encode('utf-8'))
+    def send_400(self, message=None):
+        try:
+            self.wfile.write(b"HTTP/1.1 400 Bad Request\r\n")
+            if message:
+                self.wfile.write(b"Content-Type: text/html\r\n")
+                self.wfile.write(f"Content-Length: {len(message)}\r\n".encode('utf-8'))
+                self.wfile.write(b"\r\n")
+                self.wfile.write(message.encode('utf-8'))
             self.wfile.write(b"\r\n")
-            self.wfile.write(message.encode('utf-8'))
-        self.wfile.write(b"\r\n")
+        except BrokenPipeError as e:
+            print(f"BrokenPipeError occurred: {e}")
+
 
     def get_cookies(self, headers) -> dict:
        
