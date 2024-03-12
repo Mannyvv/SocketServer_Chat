@@ -26,11 +26,16 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
     active_connections = []
     def handle(self):
 
-        if len(MyTCPHandler.active_connections) >= 50:
-            self.send_400("Connection limit reached")
+        if len(MyTCPHandler.active_connections) >= 20:
+            for connection in MyTCPHandler.active_connections[:]:
+                MyTCPHandler.active_connections.remove(connection)
+                connection.request.close()
+            self.send_400(f'Connection limit reached: {len(MyTCPHandler.active_connections)}')
             self.request.close()
             return
+
         
+        print(len(MyTCPHandler.active_connections))
         MyTCPHandler.active_connections.append(self)
 
         header_data = b''
