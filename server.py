@@ -27,10 +27,10 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
     def handle(self):
 
         if len(MyTCPHandler.active_connections) >= 20:
+            self.send_400(f'Connection limit reached: {len(MyTCPHandler.active_connections)}')
             for connection in MyTCPHandler.active_connections[:]:
                 MyTCPHandler.active_connections.remove(connection)
                 connection.request.close()
-            self.send_400(f'Connection limit reached: {len(MyTCPHandler.active_connections)}')
             self.request.close()
             return
 
@@ -42,7 +42,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
         while True:
             #Note: strip() is used to remove the newline character at the end of the line
             line = self.rfile.readline()
-            if line == b'\r\n':
+            if line == b'\r\n' or line == b'':
                 break
             header_data += line
         
@@ -448,12 +448,18 @@ if __name__ == "__main__":
     host = "0.0.0.0"
     port = int(os.environ.get('PORT', 8080))
 
-    socketserver.ThreadingTCPServer.allow_reuse_address = True
+    socketserver.TCPServer.allow_reuse_address = True
+    
 
-    server = socketserver.ThreadingTCPServer((host, port), MyTCPHandler)
+    server = socketserver.TCPServer((host, port), MyTCPHandler)
 
     print("Listening on port " + str(port))
     sys.stdout.flush()
     sys.stderr.flush()
 
-    server.serve_forever()
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("Server stopped.")
+
+    print("Active threads:", len(MyTCPHandler.active_connections))
