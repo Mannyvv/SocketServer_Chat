@@ -11,12 +11,15 @@
 
 <body onload="onLoad()">
     <header class="header">
-        <h1>Python Socket Server</h1>
+        <a href="https://www.mannyworks.com/">
+            <h1>Python Socket Server</h1>
+        </a>
         <nav class="nav-items">
             <ul>
                 <li><a href="#" class="active">Home</a></li>
                 <li><a href="public/about.html">About</a></li>
-                <li><a href="https://github.com/Mannyvv/SocketServer_Chat/blob/main/server.py" target="_blank">Github Code</a></li>
+                <li><a href="https://github.com/Mannyvv/SocketServer_Chat/blob/main/server.py" target="_blank">Github
+                        Code</a></li>
             </ul>
     </header>
     <div class="container1">
@@ -120,7 +123,7 @@
                 <input class="text-box" id="r-password" name="r-password" type="password"
                     placeholder="Create Password" />
                 <br>
-                <input id="register" type="submit" value="Register" />
+                <input id="register-button" type="submit" value="Register" />
             </form>
 
 
@@ -128,22 +131,22 @@
             <form id="login-form" style="display: none;" onsubmit="loginForm()" method="post" action="/login-user">
                 <h1>Login</h1>
                 <label id="username-label" for="username">Username:</label>
-                <input class="text-box id=" id="username" name="username" type="text" placeholder="Enter Username" />
+                <input class="text-box" id="username" name="username" type="text" placeholder="Enter Username" />
                 <br>
 
                 <label id="password-label" for="password">Password:</label>
                 <input class="text-box" id="password" name="password" type="password" placeholder="Enter Password" />
                 <br>
-                <input id="login" type="submit" value="Login" />
+                <input id="login-button" type="submit" value="Login" />
             </form>
 
         </div>
     </div>
     <div class="container2">
         <div class="enter-chat">
-            <label id="text-box-label" for="text-box">Enter Chat:</label>
-            <input class="text-box" id="text-box" name="text-box" type="text" />
-            <input id="text-box-button" type="button" onclick="sendMessage()" value="Send" />
+            <label id="chat-box-label" for="chat-box">Enter Chat:</label>
+            <input class="chat-box" id="text-box" name="chat-box" type="text" placeholder="Enter Text Here" />
+            <input id="chat-box-button" type="button" onclick="sendMessage()" value="Send" />
         </div>
     </div>
     <script src="public/index.js"></script>

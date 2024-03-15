@@ -286,6 +286,8 @@ a:visited {
     box-shadow: 0 0 10px 1px #4b5b81;
     width: 70%;
 }
+
+
 #login-form{
     display: flex;
     flex-direction: column;
@@ -296,18 +298,5 @@ a:visited {
     border-radius: 10px;
     box-shadow: 0 0 10px 1px #4b5b81;
     width: 70%;
-
-}
-
-input{
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-
-}
-input:focus{
-    outline-width: 2px;
-    /* outline-color: rgb(255, 255, 255); */
-    box-shadow: 0 0 2px 5px #2274df;
 
 }

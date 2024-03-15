@@ -35,7 +35,7 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
             return
 
         
-        print(len(MyTCPHandler.active_connections))
+        
         MyTCPHandler.active_connections.append(self)
 
         header_data = b''
@@ -462,4 +462,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("Server stopped.")
 
-    print("Active threads:", len(MyTCPHandler.active_connections))
+    

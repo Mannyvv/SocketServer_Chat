@@ -252,14 +252,14 @@ p:hover{
     height: 100%;
 
 }
-#text-box-label{
+#chat-box-label{
     
     margin-top: 2px;
     
 }
-#text-box{
+.chat-box{
     width: 30%;
-    border: 1px black solid;
+    border: 2px rgb(100, 100, 100) solid;
     border-radius: 10px;
     text-align: end;
     height: 2em;
@@ -268,13 +268,18 @@ p:hover{
     
 }
 
-#text-box-button{
+#chat-box-button{
     height: 2em;
-    margin-top: 2px;
+    margin: 5px 0px;
+    padding: 5px 20px;
+    border-radius: 10px;
+    background-color: rgb(93, 100, 93);
+    color: white;
+    
 }
 
-#text-box-button:hover{
-    background-color: rgb(33, 94, 33);
+#chat-box-button:hover{
+    background-color: #28a745;
     color: white;
     
 }
@@ -331,6 +336,27 @@ p:hover{
     box-shadow: 0 0 10px 1px #4b5b81;
     width: 70%;
 }
+
+#register-button{
+    background-color: #0c509c;
+    color: white;
+    border: 1px black solid;
+    border-radius: 25px;
+    box-shadow: 0 0 5px 1px #4b5b81;
+    padding: 10px 20px;
+    font-size: large;
+    margin: 10px 0 10px 0;
+}
+#register-button:hover{
+    background-color: #083669;
+    cursor: pointer;
+}
+.text-box{
+    margin: 5px 15px 10px 0;
+    padding: 5px 10px;
+    width: 90%;
+}
+
 #login-form{
     display: flex;
     flex-direction: column;
@@ -341,18 +367,32 @@ p:hover{
     border-radius: 10px;
     box-shadow: 0 0 10px 1px #4b5b81;
     width: 70%;
-
 }
 
-input{
+#login-button{
+    background-color: #0c509c;
+    color: white;
+    border: 1px black solid;
+    border-radius: 25px;
+    box-shadow: 0 0 5px 1px #4b5b81;
+    padding: 10px 30px;
+    font-size: large;
+    margin: 10px 0 10px 0;
+}
+#login-button:hover{
+    background-color: #083669;
+    cursor: pointer;
+}
+/* input{
     margin-top: 5px;
     margin-bottom: 5px;
-    border-radius: 5px;
+    border-radius: 20px;
+    padding: 5px 10px;
 
-}
+} */
 input[type="text"]:focus,
 input[type="password"]:focus {
     outline-width: 2px;
     /* outline-color: rgb(255, 255, 255); */
-    box-shadow: 0 0 2px 5px #2274df;
+    box-shadow: 0 0 2px 2px #e6e6e6;
 }
