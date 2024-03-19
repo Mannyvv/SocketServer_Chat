@@ -122,6 +122,7 @@ const addToChatWindow = (data) => {
     const chatWindowBody = document.getElementById('chat-window-body');
     const newMessage = document.createElement('li');
     newMessage.classList.add('chat-window-item');
+    newMessage.classList.add('open-sans-chat');
     newMessage.setAttribute('id', data.message_id);
     if (data.user_id === user_id) {
         newMessage.classList.add('logged-user-message');

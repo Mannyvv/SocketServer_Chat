@@ -7,12 +7,17 @@
     <link rel="icon" href="public/favicon.ico" type="image/x-icon">
     <title>Socket Server - Python Chat</title>
     <link rel="stylesheet" type="text/css" href="public/index.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
 </head>
 
 <body onload="onLoad()">
     <header class="header">
         <a href="https://www.mannyworks.com/">
-            <h1>Python Socket Server</h1>
+            <h1 class="open-sans-header">Python Socket Server</h1>
         </a>
         <nav class="nav-items">
             <ul>
@@ -114,7 +119,7 @@
             </div>
             <form id="register-form" style="display: none;" onsubmit="registerForm()" method="post"
                 action="/register-user">
-                <h1>Register User</h1>
+                <h1 class="titles">Register User</h1>
                 <label id="r-username-label" for="r-username">Username:</label>
                 <input class="text-box id=" id="r-username" name="r-username" type="text"
                     placeholder="Create Username" />
@@ -129,7 +134,7 @@
 
 
             <form id="login-form" style="display: none;" onsubmit="loginForm()" method="post" action="/login-user">
-                <h1>Login</h1>
+                <h1 class="titles" >Login</h1>
                 <label id="username-label" for="username">Username:</label>
                 <input class="text-box" id="username" name="username" type="text" placeholder="Enter Username" />
                 <br>

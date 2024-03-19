@@ -6,6 +6,36 @@ html, body {
     display: block;
     color: white;
 }
+
+/* <uniquifier>: Use a unique and descriptive class name
+<weight>: Use a value from 300 to 800 */
+
+.open-sans-header {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+.open-sans-chat {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style:normal;
+    font-variation-settings:
+      "wdth" 100;
+    font-size: small;
+  }
+
+
+a{
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+}
+
 a.active {
     color: rgb(255, 255, 255);
     text-shadow: 0px 0px 10px white;
@@ -170,8 +200,22 @@ a:visited {
     border-bottom: 1px rgb(255, 255, 255) solid;
     display: block;
     margin-bottom: 0px;
-    
-   
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    /* font-size: large; */
+    font-weight: 700;
+    margin-top: 0;
+
+}
+
+.titles{
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: white;
 }
 #chat-window-body{
     list-style-type: none;
@@ -194,10 +238,11 @@ a:visited {
     display: flex;
     border: 1px black solid;
     border-radius: 20px;
-    padding: 5px;
-    margin: 4px 4px 4px 0;
+    padding: 8px;
+    margin: 5px 4px 5px 0;
     background-color: #858585;
     align-items: center;
+
 }
 
 p{
@@ -272,15 +317,19 @@ p:hover{
     height: 2em;
     margin: 5px 0px;
     padding: 5px 20px;
-    border-radius: 10px;
+    border-radius: 25px;
     background-color: rgb(93, 100, 93);
     color: white;
+    box-shadow: 0 0 5px 1px #5e5e5f;
     
 }
+
 
 #chat-box-button:hover{
     background-color: #28a745;
     color: white;
+    cursor: pointer;
+    transform: scale(.95);
     
 }
 
@@ -323,6 +372,7 @@ p:hover{
     background-color: #083669;
     color: white;
     cursor: pointer;
+    transform: scale(.95);
 }
 
 #register-form{
@@ -346,10 +396,13 @@ p:hover{
     padding: 10px 20px;
     font-size: large;
     margin: 10px 0 10px 0;
+
 }
 #register-button:hover{
+
     background-color: #083669;
     cursor: pointer;
+    transform: scale(.95);
 }
 .text-box{
     margin: 5px 15px 10px 0;
@@ -382,6 +435,7 @@ p:hover{
 #login-button:hover{
     background-color: #083669;
     cursor: pointer;
+    transform: scale(.95);
 }
 /* input{
     margin-top: 5px;
